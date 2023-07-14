@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>All Users</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid black;
+      padding: 8px;
+    }
+	a{
+		
+	}
+  </style>
+</head>
+<body>
+	<h1><a href="/">go to main page</a> </h1>
+	
+
+  <h1>All Users</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Password</th>
+      </tr>
+    </thead>
+    <tbody id="userTableBody"></tbody>
+  </table>
+
+  <script>
+    // Sample array of users with name and password fields
+    let users = [
+      { name: 'User 1', password: 'Password 1' },
+      { name: 'User 2', password: 'Password 2' },
+      { name: 'User 3', password: 'Password 3' }
+    ];
+
+    // Function to replace the table content with actual user data
+    function displayUsers() {
+      const userTableBody = document.getElementById('userTableBody');
+      userTableBody.innerHTML = '';
+
+      users.forEach(user => {
+        const row = document.createElement('tr');
+        const nameCell = document.createElement('td');
+        const passwordCell = document.createElement('td');
+        nameCell.textContent = user.name;
+        passwordCell.textContent = user.password;
+        row.appendChild(nameCell);
+        row.appendChild(passwordCell);
+        userTableBody.appendChild(row);
+      });
+    }
+
+    // Fetch users from the server and update the array
+    async function fetchUsers() {
+      try {
+        const response = await fetch('/usersarray');
+        const data = await response.json();
+        users = data; // Replace the sample data with the actual user data
+        displayUsers(); // Call the function to display the users in the table
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+
+    // Call the function to fetch and display users
+    fetchUsers();
+  </script>
+</body>
+</html>

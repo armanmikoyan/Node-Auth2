@@ -1,0 +1,21 @@
+{
+  "name": "node_authorization",
+  "version": "1.0.0",
+  "description": "jwt bcript node",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon -r dotenv/config back_end/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/armanmikoyan/node_authorization.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/armanmikoyan/node_authorization/issues"
+  },
+  "homepage": "https://github.com/armanmikoyan/node_authorization#readme",
+  "type": "module"
+}
