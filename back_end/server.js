@@ -85,7 +85,7 @@ const checkTokenMiddleware = (req, res, next) => {
 	  req.users = decoded;
 	  next();
 	} catch (error) {
-	  return res.status(401).json({ error: 'Unauthorized' });
+	  return res.status(401).json({ error: 'Unauthorized...' });
 	}
   };
 
