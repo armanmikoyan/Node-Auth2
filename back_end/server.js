@@ -2,6 +2,27 @@ import express from "express";
 import mongoose from "mongoose"
 import user from "../mongodb/Users.js"
 import path from "path"
+import jwt from "jsonwebtoken"
+
+
+export const secret_key = "secret_key"
+function generateAccessToken(id,name){
+	const payload = {
+		id,
+		name
+	}
+	
+	return jwt.sign(payload,secret_key,{
+		expiresIn:'24h'
+	})
+}
+
+
+  
+
+  
+
+
 
 
 
@@ -14,17 +35,7 @@ app.get('/',  (req, res) => {
 	res.sendFile(path.resolve("front_end/index.html"))	
 })
 
-app.get('/users', async (req, res) => {
-	const users = await user.find({});
-	res.sendFile(path.resolve("front_end/users.html"))
 
-})
-
-app.get('/usersarray', async (req, res) => {
-	const users = await user.find({});
-	res.send(users)
-
-})
 
 app.get('/registration', async (req, res) => {
 	res.sendFile(path.resolve("front_end/registration.html"))	
@@ -48,12 +59,50 @@ app.post('/login', async (req, res) => {
     
 	 const valid_user = await user.findOne({name});
 	 if(valid_user && valid_user.password == password){
-		 res.json('success')
+		 const token = generateAccessToken(user._id,user._name)
+		 res.json(token)
+		 
 	 }else{
 		res.json('fail name or password is invalid')
 	 }
 	 
 })
+
+const checkTokenMiddleware = (req, res, next) => {
+
+	const token = req.headers.authorization;
+
+	if (!token || !token.startsWith('Bearer ')) {
+	  return res.status(401).json({ error: 'Unauthsorized' });
+	}
+
+	const formattedToken = token.split(' ')[1];
+  
+	try {
+
+	  const decoded = jwt.verify(formattedToken,secret_key);
+	 
+	  req.users = decoded;
+	  next();
+	} catch (error) {
+	  return res.status(401).json({ error: 'Unauthorized' });
+	}
+  };
+
+
+app.get('/users', checkTokenMiddleware, async (req, res) => {
+	const users = await user.find();
+	res.json(users)
+})
+
+
+
+
+
+
+
+
+
 
 
 

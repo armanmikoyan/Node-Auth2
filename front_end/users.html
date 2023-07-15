@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>All Users</title>
   <style>
@@ -7,18 +8,20 @@
       border-collapse: collapse;
       width: 100%;
     }
-    th, td {
+
+    th,
+    td {
       border: 1px solid black;
       padding: 8px;
     }
-	a{
-		
-	}
+
+    a {}
   </style>
 </head>
+
 <body>
-	<h1><a href="/">go to main page</a> </h1>
-	
+  <h1><a href="/">go to main page</a> </h1>
+
 
   <h1>All Users</h1>
   <table>
@@ -34,10 +37,34 @@
   <script>
     // Sample array of users with name and password fields
     let users = [
-      { name: 'User 1', password: 'Password 1' },
-      { name: 'User 2', password: 'Password 2' },
-      { name: 'User 3', password: 'Password 3' }
+
     ];
+
+    let logoutButton = document.createElement('button');;
+    function displayerror() {
+      // Create the error page elements
+      const body = document.querySelector('body');
+      const errorContainer = document.createElement('div');
+      errorContainer.style.backgroundColor = '#f1f1f1';
+      errorContainer.style.textAlign = 'center';
+      errorContainer.style.fontFamily = 'Arial, sans-serif';
+      errorContainer.style.marginTop = '20%';
+
+      const errorHeading = document.createElement('h1');
+      errorHeading.style.color = '#e74c3c';
+      errorHeading.textContent = 'Error';
+
+      const errorMessage = document.createElement('p');
+      errorMessage.style.color = '#333333';
+      errorMessage.textContent = 'An error occurred. Please try again later.';
+
+
+      // Append the elements to the body
+      errorContainer.appendChild(errorHeading);
+      errorContainer.appendChild(errorMessage);
+      body.appendChild(errorContainer);
+
+    }
 
     // Function to replace the table content with actual user data
     function displayUsers() {
@@ -53,23 +80,75 @@
         row.appendChild(nameCell);
         row.appendChild(passwordCell);
         userTableBody.appendChild(row);
+
       });
+
+
+
     }
+
+
 
     // Fetch users from the server and update the array
     async function fetchUsers() {
       try {
-        const response = await fetch('/usersarray');
+        const response = await fetch('/users', {
+          method: 'GET',
+          headers: {
+            authorization: 'Bearer ' + localStorage.getItem('token'),
+
+          }
+        });
         const data = await response.json();
+
         users = data; // Replace the sample data with the actual user data
         displayUsers(); // Call the function to display the users in the table
+        const userWindow = document.createElement('div');
+        userWindow.classList.add('user-window');
+        userWindow.style.position = 'fixed';
+        userWindow.style.top = '20px';
+        userWindow.style.right = '20px';
+        userWindow.style.backgroundColor = '#f1f1f1';
+        userWindow.style.padding = '10px';
+        userWindow.style.borderRadius = '4px';
+
+        const userName = document.createElement('p');
+        userName.textContent = `welcome back ${localStorage.getItem("name")}`; // Replace with the actual user name
+        
+        logoutButton.textContent = 'Logout';
+        document.body.appendChild(logoutButton);
+        logoutButton.textContent = 'Logout';
+        logoutButton.style.backgroundColor = '#e74c3c';
+        logoutButton.style.color = '#fff';
+        logoutButton.style.border = 'none';
+        logoutButton.style.padding = '10px 20px';
+        logoutButton.style.borderRadius = '4px';
+        logoutButton.style.cursor = 'pointer';
+        // Append the elements to the document body
+        document.body.appendChild(userWindow);
+        userWindow.appendChild(userName);
+
+
       } catch (error) {
-        console.error('Error:', error);
+        displayerror()
       }
     }
 
     // Call the function to fetch and display users
     fetchUsers();
+
+
+    
+    logoutButton.addEventListener('click',()=>{
+      fetch('/logout').then(()=>{
+        localStorage.removeItem('token');
+        localStorage.removeItem('name');
+        window.location.href = '/login'
+      })
+    })
+
+
   </script>
 </body>
+
 </html>

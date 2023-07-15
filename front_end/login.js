@@ -19,21 +19,15 @@ document.getElementById('loginForm').addEventListener('submit', function (event)
 		},
 		body: JSON.stringify(data)
 	}).then((data) => {
-
 		return data.json()
 
-	}).then((resp) => {
-
-		elem.innerHTML = resp
-		if (resp == "fail name or password is invalid") {
-			elem.style.color = 'red'
-		} else {
-			elem.style.color = 'green'
-		}
-
-
-
+	}).then((key) => {
+		localStorage.setItem('token', key);
+		localStorage.setItem('name', name);
+		window.location.href = '/users.html';
+	
 	})
+
 
 
 
